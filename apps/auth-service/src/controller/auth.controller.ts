@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response  } from "express" 
-import { validateRegistrationData } from "../utils/auth.helper"
+import { checkOtpRestrictions, trackOtpRequests, validateRegistrationData } from "../utils/auth.helper"
 import prisma from "../../../../packages/lib/prisma";
 
 //  Register a new user
@@ -16,6 +16,7 @@ export const userRegistration = async (req: Request, res: Response, next: NextFu
         return next(new Error('User already exists'))
     }
 
-    await checkOtpRestrictions(email);
+    await checkOtpRestrictions(email, next);
+    await trackOtpRequests(email, next);
 }
 
