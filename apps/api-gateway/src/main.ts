@@ -1,7 +1,7 @@
 /**
  * This is not a production server yet!
  * This is only a minimal backend to get started.
- */
+ **/
 
 import express from 'express';
 import * as path from 'path';
@@ -18,7 +18,6 @@ const app = express();
 app.use(
   cors({
     origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
@@ -42,14 +41,13 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-
-app.get('/api', (req, res) => {
+app.get('/gateway-health', (req, res) => {
   res.send({ message: 'Welcome to api-gateway!' });
 });
 
-const port = process.env.PORT || 3333;
+app.use("/", proxy("http://localhost:6000")); // Auth Service
+
+const port = process.env.PORT || 8080;
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/api`);
 });

@@ -6,19 +6,27 @@ import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 import axios from 'axios';
 import cookieParser from 'cookie-parser';
-
-
-
-const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 6000;
+import { posix } from 'path';
 
 const app = express();
 
+app.use(
+  cors({
+    origin: ['http://localhost:3000'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+)
 
 app.get('/', (req, res) => {
   res.send({ message: 'Hello API' });
 });
 
-app.listen(port, host, () => {
-  console.log(`[ ready ] http://${host}:${port}`);
+const port = process.env.PORT || 6000;
+const server = app.listen(port, () => {
+  console.log(`Listening at http://localhost:${port}/api`);
+});
+
+server.on('error', (error) => {
+  console.error("server error:", error);
 });
