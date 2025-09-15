@@ -7,6 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import axios from 'axios';
 import cookieParser from 'cookie-parser';
 import { posix } from 'path';
+import { errorMiddleware } from '../../../packages/error-handler/error-middleware';
 
 const app = express();
 
@@ -18,9 +19,14 @@ app.use(
   })
 )
 
+app.use(express.json());
+app.use(cookieParser());
+
 app.get('/', (req, res) => {
   res.send({ message: 'Hello API' });
 });
+
+app.use(errorMiddleware);
 
 const port = process.env.PORT || 6000;
 const server = app.listen(port, () => {
