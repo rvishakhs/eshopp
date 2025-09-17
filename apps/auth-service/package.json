@@ -1,111 +1,39 @@
 {
-  "name": "@eshopp/auth-service",
+  "name": "@./auth-service",
   "version": "0.0.1",
   "private": true,
-  "nx": {
+  "scripts": {
+    "dev": "ts-node src/main.ts"
+  },
+  "nx" : {
+    "name" : "auth-service",
+    "projectType": "application",
+    "sourceRoot": "apps/auth-service/src",
     "targets": {
-      "build": {
-        "executor": "@nx/esbuild:esbuild",
-        "outputs": [
-          "{options.outputPath}"
-        ],
-        "defaultConfiguration": "production",
-        "options": {
-          "platform": "node",
-          "outputPath": "apps/auth-service/dist",
-          "format": [
-            "cjs"
-          ],
-          "bundle": false,
-          "main": "apps/auth-service/src/main.ts",
-          "tsConfig": "apps/auth-service/tsconfig.app.json",
-          "assets": [
-            "apps/auth-service/src/assets"
-          ],
-          "esbuildOptions": {
-            "sourcemap": true,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
-        },
-        "configurations": {
-          "development": {},
-          "production": {
-            "esbuildOptions": {
-              "sourcemap": false,
-              "outExtension": {
-                ".js": ".js"
-              }
-            }
-          }
-        }
-      },
-      "prune-lockfile": {
-        "dependsOn": [
-          "build"
-        ],
-        "cache": true,
-        "executor": "@nx/js:prune-lockfile",
-        "outputs": [
-          "{workspaceRoot}/apps/auth-service/dist/package.json",
-          "{workspaceRoot}/apps/auth-service/dist/package-lock.json"
-        ],
-        "options": {
-          "buildTarget": "build"
-        }
-      },
-      "copy-workspace-modules": {
-        "dependsOn": [
-          "build"
-        ],
-        "cache": true,
-        "outputs": [
-          "{workspaceRoot}/apps/auth-service/dist/workspace_modules"
-        ],
-        "executor": "@nx/js:copy-workspace-modules",
-        "options": {
-          "buildTarget": "build"
-        }
-      },
-      "prune": {
-        "dependsOn": [
-          "prune-lockfile",
-          "copy-workspace-modules"
-        ],
-        "executor": "nx:noop"
-      },
       "serve": {
-        "continuous": true,
         "executor": "@nx/js:node",
         "defaultConfiguration": "development",
         "dependsOn": [
           "build"
         ],
         "options": {
-          "buildTarget": "@eshopp/auth-service:build",
+          "buildTarget": "auth-service:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
-          "development": {
-            "buildTarget": "@eshopp/auth-service:build:development"
+          "development" : {
+            "buildTarget": "auth-service:build:development"
           },
-          "production": {
-            "buildTarget": "@eshopp/auth-service:build:production"
+          "production" : {
+            "buildTarget": "auth-service:build:production"
           }
         }
       },
       "test": {
         "options": {
-          "passWithNoTests": true
+          "passWithNoTests" : true
         }
       }
     }
-  },
-  "dependencies": {
-    "express": "^4.21.2"
-  },
-  "devDependencies": {
-    "@types/ejs": "^3.1.5"
   }
 }
